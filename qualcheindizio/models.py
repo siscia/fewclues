@@ -22,7 +22,8 @@ class Indizio(models.Model):
     Autore = models.ForeignKey(User)
     DataCreazione = models.DateTimeField(default = datetime.datetime.now)
     Domanda = models.ForeignKey(Domanda)
-        
+    Online = models.BooleanField(default = False)
+
     def __unicode__(self):
         return self.Indizio
         

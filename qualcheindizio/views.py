@@ -3,6 +3,8 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+
 from fewclues.qualcheindizio.models import *
 from fewclues.qualcheindizio.form import formRisposta
 
@@ -50,7 +52,7 @@ def getIndizi(domanda, quantita = None):
     return domanda.indizio_set.all().order_by('-DataCreazione')[quantita]
     SICURAMENTE DA VERIFICARE IN CASO DI IMPLEMENTAZIONE"""
     
-    return domanda.indizio_set.all().order_by('-DataCreazione')
+    return domanda.indizio_set.filter(Online = True).order_by('-DataCreazione')
 
 def getSbagliate(indizi):
     """La funzione ritorna un dizionario del tipo
@@ -72,6 +74,7 @@ def closeDomanda(domanda):
     domanda.DataChiusura = datetime.datetime.now()
     domanda.save()
 
+@login_required(login_url = '/user/login')
 def QualcheindizioMain(request, ID):
     """La funzione ha il compito di gestire le richieste che arrivano e di ritornare una risposta"""
     contenuti = dict() #necessario per memorizzare le varie info
